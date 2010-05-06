@@ -8,7 +8,7 @@ A simple app that makes it easy to store user activities (events) on your site s
 This is similar to Google Analytics or Mixpanel, except its stored in your own database and no requests to outside services are needed.
 
 
-WHY
+Why?
 ========
 
 Because its important to start collecting data, even if you don't have the capabilities to start plotting and understanding it yet.
@@ -22,22 +22,75 @@ Because storing the data localy gives ultimate control and privacy.
 Because danger never takes a vacation!
 
 
-USAGE
+Usage
 =======
 
 Storing a new activity record is incredibly easy.  Simply create and save a new activity object
 giving it the request object, a subject and two optional values.
 
 from activity import Activity
-Activity(request, subject, value1, value2)
+Activity(request, subject, value1, value2).save()
+
+See Examples below.
 
 
-Examples: 
+Installation
+============
+
+Download this source code to somewhere in your python path and rename it to 'activity'.
+
+git clone git@github.com:godavemon/django-activity.git
+mv django-activity activity
+
+Next add 'activity' to your INSTALLED_APPS tuple in your settings.py 
+
+
+Bonus Installation! 
+===================
+
+We're working on creating some easy hooks for common activities to be recorded.  For now there is one:
+
+Page Visits:  If you'd like to keep track of the pages your users are viewing and the pages they're coming from simply add 'activity.middleware.PageActivity' to the MIDDLEWARE_CLASSES tuple in settings.py
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.doc.XViewMiddleware',
+
+    'activity.middleware.PageActivity',
+)
+
+
+
+
+
+Details
+=========
+
+The Activity object automatically pulls out ipaddr, session and user_id (if they are logged in) from the request object.  
+
+The created activity_activity table looks like this 
+
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int(11)      | NO   | PRI | NULL    | auto_increment | 
+| ipaddr  | varchar(39)  | NO   |     | NULL    |                | 
+| session | varchar(40)  | NO   |     | NULL    |                | 
+| user_id | int(11)      | YES  | MUL | NULL    |                | 
+| date    | datetime     | NO   |     | NULL    |                | 
+| subject | varchar(100) | NO   |     | NULL    |                | 
+| value1  | varchar(200) | YES  |     | NULL    |                | 
+| value2  | varchar(200) | YES  |     | NULL    |                | 
++---------+--------------+------+-----+---------+----------------+
+
+
+Examples 
 ==========
 
 # Record a page view and its referer
 Activity(request, 'pageview', request.get_full_path(), request.META.get("HTTPREFERER", "")).save()
-
 
 # Record that the user edited their profile
 Activity(request, 'profile-edit')
