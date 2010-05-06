@@ -1,0 +1,50 @@
+
+
+Django-Activity
+==================
+
+A simple app that makes it easy to store user activities (events) on your site such as page visits, model edits, etc.
+
+This is similar to Google Analytics or Mixpanel, except its stored in your own database and no requests to outside services are needed.
+
+
+WHY
+========
+
+Because its important to start collecting data, even if you don't have the capabilities to start plotting and understanding it yet.
+
+Because it has to be simple.
+
+Because storing these metrics in a local database is much faster than pinging an external service.
+
+Because storing the data localy gives ultimate control and privacy.
+
+Because danger never takes a vacation!
+
+
+USAGE
+=======
+
+Storing a new activity record is incredibly easy.  Simply create and save a new activity object
+giving it the request object, a subject and two optional values.
+
+from activity import Activity
+Activity(request, subject, value1, value2)
+
+
+Examples: 
+==========
+
+# Record a page view and its referer
+Activity(request, 'pageview', request.get_full_path(), request.META.get("HTTPREFERER", "")).save()
+
+
+# Record that the user edited their profile
+Activity(request, 'profile-edit')
+
+# Record a phase in a singup funnel
+Activity(request, 'signup-funnel', 3, 'submitteddetails')  
+
+# Record that a song was played
+Activity(request, 'song-played', 'Hey Jude')
+
