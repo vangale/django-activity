@@ -14,7 +14,7 @@ class Activity(models.Model):
     
     # These feilds are auto-filled with the request object
     ipaddr  = models.CharField(max_length = 39)
-    session = models.CharField(max_length = Session._meta.fields[0].max_length) # Note: Using a CharField instead of FK here to avoid cascading deletes as deletes are common with the Session field
+    session = models.CharField(max_length = Session._meta.fields[0].max_length, blank=True, null=True) # Note: Using a CharField instead of FK here to avoid cascading deletes as deletes are common with the Session field
     user    = models.ForeignKey(User, blank=True, null=True)
     
     date    = models.DateTimeField(auto_now_add = True)
@@ -30,7 +30,9 @@ class Activity(models.Model):
         #self.value2 = value2
         self.process_request(request)
         
-        kwargs['user_id'] = self.user.id
+        if self.user:
+            kwargs['user_id'] = self.user.id
+
         kwargs['ipaddr'] = self.ipaddr
         kwargs['session'] = self.session
         kwargs['subject'] = subject
@@ -42,10 +44,11 @@ class Activity(models.Model):
     def process_request(self, request):
         self.ipaddr = request.META['REMOTE_ADDR']
         self.session = request.session._session_key
+        self.user = None
         if request.user.is_authenticated():
             self.user = request.user
 
-    
+        
         
 
 
