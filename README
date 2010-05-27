@@ -28,7 +28,7 @@ Usage
 Storing a new activity record is incredibly easy.  Simply create and save a new activity object
 giving it the request object, a subject and two optional values.
 
-from activity import Activity
+from djangactivity import Activity
 Activity(request, subject, value1, value2).save()
 
 See Examples below.
@@ -42,7 +42,7 @@ Download this source code to somewhere in your python path and rename it to 'act
 git clone git@github.com:godavemon/django-activity.git
 mv django-activity activity
 
-Next add 'activity' to your INSTALLED_APPS tuple in your settings.py 
+Next add 'djangoactivity' to your INSTALLED_APPS tuple in your settings.py 
 
 
 Bonus Installation! 
@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
 
-    'activity.middleware.PageActivity',
+    'djangoactivity.middleware.PageActivity',
 )
 
 
@@ -70,7 +70,7 @@ Details
 
 The Activity object automatically pulls out ipaddr, session and user_id (if they are logged in) from the request object.  
 
-The created activity_activity table looks like this 
+The created djangoactivity_activity table looks like this 
 
 +---------+--------------+------+-----+---------+----------------+
 | Field   | Type         | Null | Key | Default | Extra          |
@@ -101,3 +101,28 @@ Activity(request, 'signup-funnel', 3, 'submitteddetails')
 # Record that a song was played
 Activity(request, 'song-played', 'Hey Jude')
 
+
+
+
+JavaScript
+============
+
+
+Include the djangoactivity/media/action.js file in your page and you can store Activities in Javascript as well.
+
+User request information is stored automatically along with the activity record.
+
+
+
+<script src="yourpathto/activity.js" text="text/javascript"></script>
+
+<script type='text/javascript'>
+
+Activity("somesubject", 'optional value', 'optional second value');
+
+function openlightbox() {
+	 ... do stuff
+	 
+	 Activity("lightbox opened")
+}
+</script>

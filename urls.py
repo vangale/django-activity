@@ -1,5 +1,9 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('activity.views', 
-                       (r'^request/', 'request', {})
+urlpatterns = patterns(
+    'djangoactivity.views', 
+    (r'^request/', 'request', {}),
+    (r'^record/', 'record', {}),
+    
+    
 )
