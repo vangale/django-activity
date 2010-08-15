@@ -19,7 +19,7 @@ class PageActivity:
         print referer, page
         
         # Use the following if statement if you are also serving media files (usual dev version only)
-        if not (re.search("\.[js|png|jpg|css]", page)):
+        if not (re.search("\.[js|png|jpg|css|ico]", page)) and not re.search("/djscript/", page):
             print "saving!"
             activity = Activity(request, 'pages', page, referer).save()
             print "saved", Activity.objects.all().count(), activity.id

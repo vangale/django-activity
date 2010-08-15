@@ -25,21 +25,21 @@ class Activity(models.Model):
     value2  = models.CharField(max_length = VALUE2SIZE, blank=True, null=True)
     
     def __init__(self, request, subject, value1='', value2 = '', *args, **kwargs):
-        #self.subject = subject
-        #self.value1 = value1
-        #self.value2 = value2
+        kwargs['subject'] = subject
+        kwargs['value1'] = value1
+        kwargs['value2'] = value2
+
+        super(Activity, self).__init__(*args, **kwargs)
+        
         self.process_request(request)
         
         if self.user:
             kwargs['user_id'] = self.user.id
 
-        kwargs['ipaddr'] = self.ipaddr
-        kwargs['session'] = self.session
-        kwargs['subject'] = subject
-        kwargs['value1'] = value1
-        kwargs['value2'] = value2
-
-        return super(Activity, self).__init__(*args, **kwargs)
+        #kwargs['ipaddr'] = self.ipaddr
+        #kwargs['session'] = self.session
+        
+        
     
     def process_request(self, request):
         self.ipaddr = request.META['REMOTE_ADDR']
